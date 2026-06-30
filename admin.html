@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Portfolio</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="bi bi-person-bounding-box"></i></div>
+      <div class="sidebar-brand">Portfolio Admin <small>Panel de Control</small></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <div class="nav-item active" data-panel="dashboard" id="nav-dashboard">
+        <i class="bi bi-grid-1x2"></i> Dashboard
+      </div>
+      <div class="nav-item" data-panel="personal" id="nav-personal">
+        <i class="bi bi-person-circle"></i> Información Personal
+      </div>
+
+      <div class="nav-section-label">Contenido</div>
+      <div class="nav-item" data-panel="skills" id="nav-skills">
+        <i class="bi bi-bar-chart-line"></i> Habilidades
+      </div>
+      <div class="nav-item" data-panel="experience" id="nav-experience">
+        <i class="bi bi-briefcase"></i> Experiencia
+      </div>
+      <div class="nav-item" data-panel="education" id="nav-education">
+        <i class="bi bi-mortarboard"></i> Educación
+      </div>
+      <div class="nav-item" data-panel="projects" id="nav-projects">
+        <i class="bi bi-images"></i> Proyectos
+      </div>
+      <div class="nav-item" data-panel="socials" id="nav-socials">
+        <i class="bi bi-share"></i> Redes Sociales
+      </div>
+
+      <div class="nav-section-label">Sistema</div>
+      <div class="nav-item" data-panel="security" id="nav-security">
+        <i class="bi bi-shield-lock"></i> Seguridad
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>v1.0.0</span>
+      <button class="btn-logout" id="logout-btn">
+        <i class="bi bi-box-arrow-left"></i> Salir
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────────── -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <span class="topbar-badge" id="topbar-user"><i class="bi bi-person"></i> admin</span>
+        <a href="index.html" target="_blank" class="btn-secondary" style="font-size:0.72rem; padding:0.35rem 0.8rem;">
+          <i class="bi bi-eye"></i> Ver Portafolio
+        </a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ── Dashboard ────────────────────────────────────── -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Dashboard</div>
+            <div class="panel-subtitle">Resumen general del portafolio</div>
+          </div>
+        </div>
+
+        <div class="stats-row" id="stats-row"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div class="card">
+            <div class="card-title"><i class="bi bi-lightning-charge"></i> Acciones Rápidas</div>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+              <button class="btn-primary" onclick="switchPanel('personal')"><i class="bi bi-person-gear"></i> Editar Perfil</button>
+              <button class="btn-secondary" onclick="switchPanel('projects')"><i class="bi bi-plus-circle"></i> Agregar Proyecto</button>
+              <button class="btn-secondary" onclick="switchPanel('skills')"><i class="bi bi-sliders"></i> Editar Habilidades</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="bi bi-info-circle"></i> Info del Sistema</div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.82rem;color:var(--text-2);">
+              <div style="display:flex;justify-content:space-between;"><span>Almacenamiento</span><span style="color:var(--success)">LocalStorage</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>Estado</span><span style="color:var(--success)">● Activo</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>Última modificación</span><span id="last-modified">—</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>Portafolio público</span><a href="index.html" target="_blank" style="color:var(--accent);">Ver sitio →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Personal Info ─────────────────────────────────── -->
+      <div class="admin-panel" id="panel-personal">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Información Personal</div>
+            <div class="panel-subtitle">Datos que aparecen en el portafolio</div>
+          </div>
+          <button class="btn-primary" id="save-personal"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-person-vcard"></i> Foto de Perfil</div>
+          <div class="photo-upload-wrap">
+            <img class="photo-preview" id="photo-preview" src="profile.png" alt="Foto">
+            <div>
+              <div class="form-group" style="margin-bottom:0.5rem;">
+                <label class="admin-label">URL / Ruta de la imagen</label>
+                <input class="admin-input" id="field-photo" type="text" placeholder="profile.png o URL">
+              </div>
+              <small style="color:var(--text-2);font-size:0.72rem;">Puedes poner la ruta local (ej: profile.png) o una URL externa</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-file-person"></i> Datos Básicos</div>
+          <div class="form-grid">
+            <div>
+              <label class="admin-label">Nombre</label>
+              <input class="admin-input" id="field-firstName" type="text">
+            </div>
+            <div>
+              <label class="admin-label">Apellido</label>
+              <input class="admin-input" id="field-lastName" type="text">
+            </div>
+            <div>
+              <label class="admin-label">Título / Profesión</label>
+              <input class="admin-input" id="field-title" type="text" placeholder="Ej: Graphic Designer">
+            </div>
+            <div>
+              <label class="admin-label">Teléfono</label>
+              <input class="admin-input" id="field-phone" type="text">
+            </div>
+            <div>
+              <label class="admin-label">Email</label>
+              <input class="admin-input" id="field-email" type="email">
+            </div>
+            <div>
+              <label class="admin-label">Ciudad / Estado</label>
+              <input class="admin-input" id="field-location" type="text" placeholder="Ej: Florida, Orlando">
+            </div>
+            <div class="form-full">
+              <label class="admin-label">Dirección</label>
+              <input class="admin-input" id="field-address" type="text">
+            </div>
+            <div class="form-full">
+              <label class="admin-label">Biografía / Descripción</label>
+              <textarea class="admin-textarea" id="field-bio" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-tags"></i> Habilidades Extra</div>
+          <div class="form-grid">
+            <div class="form-full">
+              <label class="admin-label">¿Qué puedo hacer? (una por línea)</label>
+              <textarea class="admin-textarea" id="field-whatcando" rows="4" placeholder="Logo · Stationary · Branding"></textarea>
+            </div>
+            <div class="form-full">
+              <label class="admin-label">Habilidades de Diseño (una por línea)</label>
+              <textarea class="admin-textarea" id="field-designskills" rows="4" placeholder="Creativity · Planning & Strategy"></textarea>
+            </div>
+            <div class="form-full">
+              <label class="admin-label">Habilidades Personales (separadas por coma)</label>
+              <input class="admin-input" id="field-personalskills" type="text" placeholder="Creativity, Team Work, Organisation">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-emoji-smile"></i> Hobbies e Intereses</div>
+          <div id="hobbies-list"></div>
+          <button class="btn-secondary" id="add-hobby"><i class="bi bi-plus"></i> Agregar Hobby</button>
+        </div>
+      </div>
+
+      <!-- ── Skills ────────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-skills">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Habilidades</div>
+            <div class="panel-subtitle">Software skills y lenguajes</div>
+          </div>
+          <button class="btn-primary" id="save-skills"><i class="bi bi-check-lg"></i> Guardar</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-laptop"></i> Habilidades de Software</div>
+          <div id="software-skills-list"></div>
+          <button class="btn-secondary" id="add-software-skill" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Agregar</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-translate"></i> Idiomas</div>
+          <div id="language-skills-list"></div>
+          <button class="btn-secondary" id="add-language-skill" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Agregar</button>
+        </div>
+      </div>
+
+      <!-- ── Experience ────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-experience">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Experiencia Laboral</div>
+            <div class="panel-subtitle">Historial de trabajos y posiciones</div>
+          </div>
+          <button class="btn-primary" id="save-experience"><i class="bi bi-check-lg"></i> Guardar</button>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="bi bi-briefcase"></i> Experiencias</div>
+          <div id="experience-list-admin"></div>
+          <button class="btn-secondary" id="add-experience" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Agregar Experiencia</button>
+        </div>
+      </div>
+
+      <!-- ── Education ─────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-education">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Educación</div>
+            <div class="panel-subtitle">Títulos y formación académica</div>
+          </div>
+          <button class="btn-primary" id="save-education"><i class="bi bi-check-lg"></i> Guardar</button>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="bi bi-mortarboard"></i> Educación</div>
+          <div id="education-list-admin"></div>
+          <button class="btn-secondary" id="add-education" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Agregar</button>
+        </div>
+      </div>
+
+      <!-- ── Projects ──────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-projects">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Proyectos</div>
+            <div class="panel-subtitle">Portafolio de trabajos realizados</div>
+          </div>
+          <button class="btn-primary" id="save-projects"><i class="bi bi-check-lg"></i> Guardar</button>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="bi bi-images"></i> Proyectos del Portafolio</div>
+          <div id="projects-list-admin"></div>
+          <button class="btn-secondary" id="add-project" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Nuevo Proyecto</button>
+        </div>
+      </div>
+
+      <!-- ── Socials ───────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-socials">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Redes Sociales</div>
+            <div class="panel-subtitle">Links del hero del portafolio</div>
+          </div>
+          <button class="btn-primary" id="save-socials"><i class="bi bi-check-lg"></i> Guardar</button>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="bi bi-share"></i> Redes</div>
+          <div id="socials-list"></div>
+          <button class="btn-secondary" id="add-social" style="margin-top:0.75rem;"><i class="bi bi-plus"></i> Agregar Red</button>
+        </div>
+      </div>
+
+      <!-- ── Security ──────────────────────────────────────── -->
+      <div class="admin-panel" id="panel-security">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Seguridad</div>
+            <div class="panel-subtitle">Cambiar credenciales de acceso</div>
+          </div>
+        </div>
+        <div class="card" style="max-width:480px;">
+          <div class="card-title"><i class="bi bi-shield-lock"></i> Cambiar Contraseña</div>
+          <div class="form-group">
+            <label class="admin-label">Nuevo Usuario</label>
+            <input class="admin-input" id="new-username" type="text">
+          </div>
+          <div class="form-group">
+            <label class="admin-label">Nueva Contraseña</label>
+            <input class="admin-input" id="new-password" type="password" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-group">
+            <label class="admin-label">Confirmar Contraseña</label>
+            <input class="admin-input" id="confirm-password" type="password">
+          </div>
+          <button class="btn-primary" id="save-security"><i class="bi bi-shield-check"></i> Actualizar Credenciales</button>
+        </div>
+
+        <div class="card" style="max-width:480px; margin-top:1.5rem;">
+          <div class="card-title"><i class="bi bi-arrow-counterclockwise"></i> Restablecer Datos</div>
+          <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:1rem;">Esto borrará todos los cambios y restaurará los datos por defecto. Esta acción no se puede deshacer.</p>
+          <button class="btn-danger" id="reset-data"><i class="bi bi-trash3"></i> Restablecer Todo</button>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </main>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="app.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
